@@ -1,131 +1,105 @@
 import { Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 export default function Dashboard() {
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#f4f6f9",
-        padding: "40px",
-        fontFamily: "Arial, sans-serif",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "900px",
-          margin: "auto",
-          background: "#fff",
-          padding: "30px",
-          borderRadius: "12px",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-        }}
-      >
-        <h1
-          style={{
-            textAlign: "center",
-            color: "#2563eb",
-            marginBottom: "10px",
-          }}
-        >
-          Mini ERP CRM
-        </h1>
+    <div style={{ minHeight: "100vh" }}>
+      <Navbar />
 
-        <p
-          style={{
-            textAlign: "center",
-            color: "#555",
-            marginBottom: "40px",
-          }}
-        >
-          Enterprise Resource Planning & Customer Relationship Management
-        </p>
+      <main style={{ maxWidth: "1100px", margin: "40px auto", padding: "0 24px" }}>
+        {/* Header Section */}
+        <div style={{ marginBottom: "32px" }}>
+          <h1 style={{ fontSize: "28px", fontWeight: "800", marginBottom: "8px" }}>
+            Overview Dashboard
+          </h1>
+          <p style={{ color: "var(--text-muted)", fontSize: "15px" }}>
+            Manage your Enterprise Customers, Inventory, and Sales Challans seamlessly.
+          </p>
+        </div>
 
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))",
-            gap: "20px",
-          }}
-        >
+        {/* Action Grid */}
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+          gap: "24px",
+          marginBottom: "40px"
+        }}>
           <Link to="/customers" style={{ textDecoration: "none" }}>
-            <div
-              style={{
-                background: "#2563eb",
-                color: "white",
-                padding: "30px",
-                borderRadius: "10px",
-                textAlign: "center",
-                cursor: "pointer",
-                fontWeight: "bold",
-                fontSize: "18px",
-              }}
-            >
-              👥
-              <br />
-              Customers
+            <div className="glass-card" style={{ padding: "32px 24px", display: "flex", flexDirection: "column", gap: "12px" }}>
+              <div style={{
+                width: "48px",
+                height: "48px",
+                borderRadius: "12px",
+                background: "rgba(59, 130, 246, 0.15)",
+                color: "#60a5fa",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "24px"
+              }}>
+                👥
+              </div>
+              <h2 style={{ fontSize: "20px", fontWeight: "700" }}>Customers CRM</h2>
+              <p style={{ color: "var(--text-muted)", fontSize: "13px" }}>
+                Add, manage, track, and update client relationship accounts.
+              </p>
+              <div style={{ color: "#60a5fa", fontWeight: "600", fontSize: "14px", marginTop: "8px" }}>
+                Manage Customers →
+              </div>
             </div>
           </Link>
 
           <Link to="/products" style={{ textDecoration: "none" }}>
-            <div
-              style={{
-                background: "#16a34a",
-                color: "white",
-                padding: "30px",
-                borderRadius: "10px",
-                textAlign: "center",
-                cursor: "pointer",
-                fontWeight: "bold",
-                fontSize: "18px",
-              }}
-            >
-              📦
-              <br />
-              Products
+            <div className="glass-card" style={{ padding: "32px 24px", display: "flex", flexDirection: "column", gap: "12px" }}>
+              <div style={{
+                width: "48px",
+                height: "48px",
+                borderRadius: "12px",
+                background: "rgba(16, 185, 129, 0.15)",
+                color: "#34d399",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "24px"
+              }}>
+                📦
+              </div>
+              <h2 style={{ fontSize: "20px", fontWeight: "700" }}>Products & Stock</h2>
+              <p style={{ color: "var(--text-muted)", fontSize: "13px" }}>
+                Track inventory levels, warehouses, pricing, and low stock alerts.
+              </p>
+              <div style={{ color: "#34d399", fontWeight: "600", fontSize: "14px", marginTop: "8px" }}>
+                View Inventory →
+              </div>
             </div>
           </Link>
 
           <Link to="/sales" style={{ textDecoration: "none" }}>
-            <div
-              style={{
-                background: "#ea580c",
-                color: "white",
-                padding: "30px",
-                borderRadius: "10px",
-                textAlign: "center",
-                cursor: "pointer",
-                fontWeight: "bold",
-                fontSize: "18px",
-              }}
-            >
-              💰
-              <br />
-              Sales
+            <div className="glass-card" style={{ padding: "32px 24px", display: "flex", flexDirection: "column", gap: "12px" }}>
+              <div style={{
+                width: "48px",
+                height: "48px",
+                borderRadius: "12px",
+                background: "rgba(245, 158, 11, 0.15)",
+                color: "#fbbf24",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "24px"
+              }}>
+                💰
+              </div>
+              <h2 style={{ fontSize: "20px", fontWeight: "700" }}>Sales Challans</h2>
+              <p style={{ color: "var(--text-muted)", fontSize: "13px" }}>
+                Create sales orders, automate totals, and auto-deduct inventory.
+              </p>
+              <div style={{ color: "#fbbf24", fontWeight: "600", fontSize: "14px", marginTop: "8px" }}>
+                Create Sales Order →
+              </div>
             </div>
           </Link>
-
-          <div
-            onClick={() => {
-              localStorage.removeItem("token");
-              window.location.href = "/";
-            }}
-            style={{
-              background: "#dc2626",
-              color: "white",
-              padding: "30px",
-              borderRadius: "10px",
-              textAlign: "center",
-              cursor: "pointer",
-              fontWeight: "bold",
-              fontSize: "18px",
-            }}
-          >
-            🚪
-            <br />
-            Logout
-          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

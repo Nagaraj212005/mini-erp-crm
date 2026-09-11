@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../api/axio";
+import Navbar from "../components/Navbar";
 
 export default function Sales() {
   const [sales, setSales] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
     customerId: "",
     productId: "",
     quantity: "",
-    status: "Draft",
+    status: "Confirmed",
   });
 
   useEffect(() => {
@@ -16,26 +18,26 @@ export default function Sales() {
   }, []);
 
   const fetchSales = async () => {
-    const token = localStorage.getItem("token");
-
-    const res = await axios.get(
-      "http://localhost:5000/api/sales",
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    setSales(res.data);
-  };
-
-  const createSale = async () => {
+    setLoading(true);
     try {
       const token = localStorage.getItem("token");
+      const res = await api.get("/sales", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setSales(res.data);
+    } catch (err) {
+      console.error("Error fetching sales:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      await axios.post(
-        "http://localhost:5000/api/sales",
+  const createSale = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("token");
+      await api.post(
+        "/sales",
         {
           customerId: Number(form.customerId),
           items: [
@@ -45,142 +47,131 @@ export default function Sales() {
             },
           ],
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
-      alert("Sales Challan Created Successfully");
-
+      alert("Sales Challan Created Successfully!");
+      setForm({
+        customerId: "",
+        productId: "",
+        quantity: "",
+        status: "Confirmed",
+      });
       fetchSales();
-    } catch {
-      alert("Failed to Create Sale");
+    } catch (err: any) {
+      console.error(err);
+      alert(err.response?.data?.message || "Failed to Create Sale");
     }
   };
 
   return (
-    <div
-      style={{
-        padding: 30,
-        background: "#f4f6f9",
-        minHeight: "100vh",
-        fontFamily: "Arial",
-      }}
-    >
-      <h1 style={{ color: "#ea580c" }}>💰 Sales Challan</h1>
+    <div style={{ minHeight: "100vh" }}>
+      <Navbar />
 
-      <div
-        style={{
-          background: "#fff",
-          padding: 20,
-          borderRadius: 10,
-          boxShadow: "0 2px 8px rgba(0,0,0,.15)",
-          marginBottom: 25,
-        }}
-      >
-        <h3>Create Sales Challan</h3>
-
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 10,
-          }}
-        >
-          <input
-            placeholder="Customer ID"
-            onChange={(e) =>
-              setForm({ ...form, customerId: e.target.value })
-            }
-          />
-
-          <input
-            placeholder="Product ID"
-            onChange={(e) =>
-              setForm({ ...form, productId: e.target.value })
-            }
-          />
-
-          <input
-            placeholder="Quantity"
-            onChange={(e) =>
-              setForm({ ...form, quantity: e.target.value })
-            }
-          />
-
-          <select
-            onChange={(e) =>
-              setForm({ ...form, status: e.target.value })
-            }
-          >
-            <option>Draft</option>
-            <option>Confirmed</option>
-          </select>
+      <main style={{ maxWidth: "1100px", margin: "40px auto", padding: "0 24px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "32px" }}>
+          <div>
+            <h1 style={{ fontSize: "28px", fontWeight: "800", marginBottom: "4px" }}>💰 Sales Challans</h1>
+            <p style={{ color: "var(--text-muted)", fontSize: "14px" }}>Issue sales challans, deduct inventory, and manage order history.</p>
+          </div>
         </div>
 
-        <br />
+        {/* Form Card */}
+        <div className="glass-card" style={{ padding: "28px", marginBottom: "32px" }}>
+          <h2 style={{ fontSize: "18px", fontWeight: "700", marginBottom: "20px" }}>📄 Generate Sales Order</h2>
+          <form onSubmit={createSale}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "16px" }}>
+              <div>
+                <label style={{ fontSize: "12px", color: "var(--text-muted)", marginBottom: "4px", display: "block" }}>
+                  CUSTOMER ID *
+                </label>
+                <input
+                  type="number"
+                  placeholder="e.g. 1"
+                  value={form.customerId}
+                  onChange={(e) => setForm({ ...form, customerId: e.target.value })}
+                  required
+                />
+              </div>
 
-        <button
-          style={{
-            background: "#ea580c",
-            color: "white",
-            padding: "10px 20px",
-            border: "none",
-            borderRadius: 6,
-            cursor: "pointer",
-          }}
-          onClick={createSale}
-        >
-          📄 Generate Challan
-        </button>
-      </div>
+              <div>
+                <label style={{ fontSize: "12px", color: "var(--text-muted)", marginBottom: "4px", display: "block" }}>
+                  PRODUCT ID *
+                </label>
+                <input
+                  type="number"
+                  placeholder="e.g. 1"
+                  value={form.productId}
+                  onChange={(e) => setForm({ ...form, productId: e.target.value })}
+                  required
+                />
+              </div>
 
-      <table
-        style={{
-          width: "100%",
-          borderCollapse: "collapse",
-          background: "white",
-          boxShadow: "0 2px 8px rgba(0,0,0,.15)",
-        }}
-      >
-        <thead style={{ background: "#ea580c", color: "white" }}>
-          <tr>
-            <th>Challan No.</th>
-            <th>Customer</th>
-            <th>Total Amount</th>
-            <th>Status</th>
-            <th>Created By</th>
-            <th>Date</th>
-          </tr>
-        </thead>
+              <div>
+                <label style={{ fontSize: "12px", color: "var(--text-muted)", marginBottom: "4px", display: "block" }}>
+                  QUANTITY *
+                </label>
+                <input
+                  type="number"
+                  placeholder="e.g. 5"
+                  value={form.quantity}
+                  onChange={(e) => setForm({ ...form, quantity: e.target.value })}
+                  required
+                />
+              </div>
+            </div>
+            <button type="submit" className="btn btn-primary" style={{ marginTop: "20px", background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)" }}>
+              Generate Sales Order
+            </button>
+          </form>
+        </div>
 
-        <tbody>
-          {sales.map((sale: any) => (
-            <tr key={sale.id} style={{ textAlign: "center" }}>
-              <td>CH-{sale.id}</td>
-              <td>{sale.customerId}</td>
-              <td>₹ {sale.totalAmount}</td>
-              <td>
-                <span
-                  style={{
-                    background: "#22c55e",
-                    color: "white",
-                    padding: "4px 10px",
-                    borderRadius: 20,
-                    fontSize: 12,
-                  }}
-                >
-                  Confirmed
-                </span>
-              </td>
-              <td>{sale.createdById}</td>
-              <td>{new Date(sale.createdAt).toLocaleString()}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+        {/* Table */}
+        <div className="glass-card" style={{ overflow: "hidden" }}>
+          <div className="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Challan No.</th>
+                  <th>Customer ID</th>
+                  <th>Total Amount</th>
+                  <th>Status</th>
+                  <th>Created Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan={5} style={{ textAlign: "center", padding: "30px", color: "var(--text-muted)" }}>
+                      Loading sales history...
+                    </td>
+                  </tr>
+                ) : sales.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} style={{ textAlign: "center", padding: "30px", color: "var(--text-muted)" }}>
+                      No sales orders generated yet.
+                    </td>
+                  </tr>
+                ) : (
+                  sales.map((sale: any) => (
+                    <tr key={sale.id}>
+                      <td style={{ fontWeight: "700" }}>CH-{sale.id}</td>
+                      <td>Customer #{sale.customerId}</td>
+                      <td style={{ fontWeight: "700", color: "#fbbf24" }}>₹ {sale.totalAmount}</td>
+                      <td>
+                        <span className="badge badge-success">Confirmed</span>
+                      </td>
+                      <td style={{ color: "var(--text-muted)" }}>
+                        {new Date(sale.createdAt).toLocaleString()}
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }
