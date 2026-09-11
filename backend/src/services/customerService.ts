@@ -4,6 +4,12 @@ export const createCustomer = async (data: {
   name: string;
   email: string;
   phone?: string;
+  businessName?: string;
+  gst?: string;
+  customerType?: string;
+  address?: string;
+  status?: string;
+  notes?: string;
 }) => {
   return await prisma.customer.create({
     data,
@@ -30,6 +36,12 @@ export const updateCustomer = async (
     name?: string;
     email?: string;
     phone?: string;
+    businessName?: string;
+    gst?: string;
+    customerType?: string;
+    address?: string;
+    status?: string;
+    notes?: string;
   }
 ) => {
   return await prisma.customer.update({

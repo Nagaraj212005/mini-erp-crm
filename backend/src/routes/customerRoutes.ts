@@ -13,11 +13,11 @@ import { authorize } from "../middleware/roleMiddleware";
 
 const router = Router();
 
-// Create Customer (Only ADMIN & MANAGER)
+// Create Customer (ADMIN, MANAGER, EMPLOYEE)
 router.post(
   "/",
   authenticate,
-  authorize("ADMIN", "MANAGER"),
+  authorize("ADMIN", "MANAGER", "EMPLOYEE"),
   createCustomer
 );
 
@@ -35,11 +35,11 @@ router.get(
   getCustomerById
 );
 
-// Update Customer (Only ADMIN & MANAGER)
+// Update Customer (ADMIN, MANAGER, EMPLOYEE)
 router.put(
   "/:id",
   authenticate,
-  authorize("ADMIN", "MANAGER"),
+  authorize("ADMIN", "MANAGER", "EMPLOYEE"),
   updateCustomer
 );
 

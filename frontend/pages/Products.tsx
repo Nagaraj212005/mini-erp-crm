@@ -6,6 +6,7 @@ export default function Products() {
   const [products, setProducts] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -25,10 +26,7 @@ export default function Products() {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
-      const res = await api.get("/products", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.get("/products");
       setProducts(res.data);
     } catch (err) {
       console.error("Error fetching products:", err);
@@ -39,22 +37,18 @@ export default function Products() {
 
   const addProduct = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitting(true);
     try {
-      const token = localStorage.getItem("token");
-      await api.post(
-        "/products",
-        {
-          name: form.name,
-          description: form.description,
-          sku: form.sku,
-          category: form.category,
-          price: Number(form.price),
-          stock: Number(form.stock),
-          minStock: Number(form.minStock),
-          warehouse: form.warehouse,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await api.post("/products", {
+        name: form.name,
+        description: form.description || undefined,
+        sku: form.sku || undefined,
+        category: form.category || undefined,
+        price: Number(form.price),
+        stock: Number(form.stock),
+        minStock: form.minStock ? Number(form.minStock) : 0,
+        warehouse: form.warehouse || undefined,
+      });
 
       alert("Product Added Successfully!");
       setForm({
@@ -71,6 +65,8 @@ export default function Products() {
     } catch (err: any) {
       console.error(err);
       alert(err.response?.data?.message || "Failed to add product");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -133,8 +129,13 @@ export default function Products() {
                 onChange={(e) => setForm({ ...form, minStock: e.target.value })}
               />
             </div>
-            <button type="submit" className="btn btn-success" style={{ marginTop: "20px" }}>
-              Save Product Item
+            <button
+              type="submit"
+              className="btn btn-success"
+              disabled={submitting}
+              style={{ marginTop: "20px" }}
+            >
+              {submitting ? "Saving Product..." : "Save Product Item"}
             </button>
           </form>
         </div>

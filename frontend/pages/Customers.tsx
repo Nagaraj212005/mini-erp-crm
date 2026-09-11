@@ -6,6 +6,7 @@ export default function Customers() {
   const [customers, setCustomers] = useState<any[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const [form, setForm] = useState({
     name: "",
@@ -27,10 +28,7 @@ export default function Customers() {
   const fetchCustomers = async () => {
     setLoading(true);
     try {
-      const token = localStorage.getItem("token");
-      const res = await api.get("/customers", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.get("/customers");
       setCustomers(res.data);
     } catch (err) {
       console.error("Error fetching customers:", err);
@@ -41,17 +39,20 @@ export default function Customers() {
 
   const addCustomer = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!form.name.trim() || !form.email.trim()) {
+      alert("Name and Email are required.");
+      return;
+    }
+    setSubmitting(true);
     try {
-      const token = localStorage.getItem("token");
-      await api.post(
-        "/customers",
-        {
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
+      await api.post("/customers", {
+        name: form.name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim() || undefined,
+        businessName: form.businessName.trim() || undefined,
+        customerType: form.customerType || "Retail",
+        status: form.status || "Active",
+      });
 
       alert("Customer Added Successfully!");
       fetchCustomers();
@@ -70,6 +71,8 @@ export default function Customers() {
     } catch (err: any) {
       console.error(err.response?.data);
       alert(err.response?.data?.message || "Failed to add customer");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -119,8 +122,13 @@ export default function Customers() {
                 onChange={(e) => setForm({ ...form, businessName: e.target.value })}
               />
             </div>
-            <button type="submit" className="btn btn-primary" style={{ marginTop: "20px" }}>
-              Add Customer Account
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={submitting}
+              style={{ marginTop: "20px" }}
+            >
+              {submitting ? "Adding Customer..." : "Add Customer Account"}
             </button>
           </form>
         </div>

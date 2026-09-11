@@ -15,7 +15,7 @@ const router = Router();
 router.post(
   "/",
   authenticate,
-  authorize("ADMIN", "MANAGER"),
+  authorize("ADMIN", "MANAGER", "EMPLOYEE"),
   createProduct
 );
 
@@ -26,7 +26,7 @@ router.get("/:id", authenticate, getProductById);
 router.put(
   "/:id",
   authenticate,
-  authorize("ADMIN", "MANAGER"),
+  authorize("ADMIN", "MANAGER", "EMPLOYEE"),
   updateProduct
 );
 
