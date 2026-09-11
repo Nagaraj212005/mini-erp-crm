@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import * as customerService from "../services/customerService";
+import { handleControllerError } from "../utils/handleError";
 
 export const createCustomer = async (req: Request, res: Response) => {
   try {
@@ -10,9 +11,7 @@ export const createCustomer = async (req: Request, res: Response) => {
       data: customer,
     });
   } catch (error: any) {
-    return res.status(500).json({
-      message: error.message || "Error creating customer",
-    });
+    return handleControllerError(res, error, "Error creating customer");
   }
 };
 
@@ -22,9 +21,7 @@ export const getAllCustomers = async (req: Request, res: Response) => {
 
     return res.status(200).json(customers);
   } catch (error: any) {
-    return res.status(500).json({
-      message: error.message || "Error fetching customers",
-    });
+    return handleControllerError(res, error, "Error fetching customers");
   }
 };
 
@@ -42,9 +39,7 @@ export const getCustomerById = async (req: Request, res: Response) => {
 
     return res.status(200).json(customer);
   } catch (error: any) {
-    return res.status(500).json({
-      message: error.message || "Error fetching customer",
-    });
+    return handleControllerError(res, error, "Error fetching customer");
   }
 };
 
@@ -60,9 +55,7 @@ export const updateCustomer = async (req: Request, res: Response) => {
       data: customer,
     });
   } catch (error: any) {
-    return res.status(500).json({
-      message: error.message || "Error updating customer",
-    });
+    return handleControllerError(res, error, "Error updating customer");
   }
 };
 
@@ -74,8 +67,6 @@ export const deleteCustomer = async (req: Request, res: Response) => {
       message: "Customer deleted successfully",
     });
   } catch (error: any) {
-    return res.status(500).json({
-      message: error.message || "Error deleting customer",
-    });
+    return handleControllerError(res, error, "Error deleting customer");
   }
-};
+};

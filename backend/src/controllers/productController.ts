@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import * as productService from "../services/productService";
+import { handleControllerError } from "../utils/handleError";
 
 export const createProduct = async (req: Request, res: Response) => {
   try {
@@ -10,9 +11,7 @@ export const createProduct = async (req: Request, res: Response) => {
       data: product,
     });
   } catch (error: any) {
-    return res.status(500).json({
-      message: error.message || "Error creating product",
-    });
+    return handleControllerError(res, error, "Error creating product");
   }
 };
 
@@ -22,9 +21,7 @@ export const getAllProducts = async (req: Request, res: Response) => {
 
     return res.status(200).json(products);
   } catch (error: any) {
-    return res.status(500).json({
-      message: error.message || "Error fetching products",
-    });
+    return handleControllerError(res, error, "Error fetching products");
   }
 };
 
@@ -42,9 +39,7 @@ export const getProductById = async (req: Request, res: Response) => {
 
     return res.status(200).json(product);
   } catch (error: any) {
-    return res.status(500).json({
-      message: error.message || "Error fetching product",
-    });
+    return handleControllerError(res, error, "Error fetching product");
   }
 };
 
@@ -60,9 +55,7 @@ export const updateProduct = async (req: Request, res: Response) => {
       data: product,
     });
   } catch (error: any) {
-    return res.status(500).json({
-      message: error.message || "Error updating product",
-    });
+    return handleControllerError(res, error, "Error updating product");
   }
 };
 
@@ -74,8 +67,6 @@ export const deleteProduct = async (req: Request, res: Response) => {
       message: "Product deleted successfully",
     });
   } catch (error: any) {
-    return res.status(500).json({
-      message: error.message || "Error deleting product",
-    });
+    return handleControllerError(res, error, "Error deleting product");
   }
-};
+};
