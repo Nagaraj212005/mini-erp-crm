@@ -1,11 +1,11 @@
-# 💼 Mini ERP + CRM Operations Portal
+#  Mini ERP + CRM Operations Portal
 
 > **Full Stack Developer Case Study Submission**  
 > A complete, production-ready Mini ERP & CRM system built with **React**, **Node.js**, **Express**, **TypeScript**, **Prisma ORM**, and **PostgreSQL**.
 
 ---
 
-## 📌 Submission Overview & Quick Links
+##  Submission Overview & Quick Links
 
 | Requirement | Details / Link |
 | :--- | :--- |
@@ -16,7 +16,7 @@
 
 ---
 
-## 🔐 Test Login Credentials (Role-Based Access Control)
+## Test Login Credentials (Role-Based Access Control)
 
 | Role | Email | Password | Allowed Actions |
 | :--- | :--- | :--- | :--- |
@@ -27,7 +27,7 @@
 
 ---
 
-## 🏗️ Architecture & System Design
+##  Architecture & System Design
 
 The application follows a clean **Layered Architecture** adhering to separation of concerns:
 
@@ -57,31 +57,31 @@ The application follows a clean **Layered Architecture** adhering to separation 
 
 ## 🚀 Key Modules & Features
 
-### 1. 🔑 Authentication & Security
+### 1.  Authentication & Security
 - Role-based authorization (`ADMIN`, `MANAGER`, `EMPLOYEE`).
 - Passwords hashed securely using `bcrypt` (10 rounds).
 - State-less authentication using Signed JWT tokens (`1d` expiration).
 
-### 2. 👥 Customer CRM Module
+### 2.  Customer CRM Module
 - Manage accounts, leads, business names, contact details, customer types (*Retail*, *Wholesale*, *Distributor*).
 - Real-time instant search across customer names and emails.
 
-### 3. 📦 Product & Inventory Module
+### 3.  Product & Inventory Module
 - SKU tracking, category management, pricing, stock levels, minimum stock alert quantity, and warehouse allocation.
 - Automatic stock status indicators (**In Stock** vs **Low Stock**).
 
-### 4. 📄 Sales Challan Module
+### 4.  Sales Challan Module
 - Generate sales orders linked to customers and inventory items.
 - **Atomic Stock Deduction**: Automatically deducts product stock upon sales order confirmation.
 - **Negative Stock Prevention**: Returns clean error messages if stock is insufficient.
 
-### 5. 📊 Executive Dashboard
+### 5.  Executive Dashboard
 - Real-time KPI summaries: Total Revenue, Total Customers, Low Stock Alerts, Total Sales.
 - Recent sales order activity feeds and interactive data views.
 
 ---
 
-## ⚙️ Local Development Setup Instructions
+##  Local Development Setup Instructions
 
 ### Prerequisites
 - Node.js (v18+)
@@ -132,7 +132,7 @@ Open **`http://localhost:5173`** in your browser and sign in!
 
 ---
 
-## ☁️ Cloud Deployment Guide (Render Blueprint)
+##  Cloud Deployment Guide (Render Blueprint)
 
 The repository includes a ready-to-use [`render.yaml`](./render.yaml) blueprint for zero-config one-click cloud deployment.
 
@@ -148,7 +148,7 @@ The repository includes a ready-to-use [`render.yaml`](./render.yaml) blueprint 
 
 ---
 
-## 📬 API Documentation & Testing
+##  API Documentation & Testing
 
 Import [`postman_collection.json`](./postman_collection.json) into Postman to test all endpoints:
 
@@ -166,7 +166,7 @@ Import [`postman_collection.json`](./postman_collection.json) into Postman to te
 
 ---
 
-## ⚠️ Known Limitations & Future Enhancements
+## Known Limitations & Future Enhancements
 
 1. **Multi-Item Challans**: Currently supports single product line items per challan; multi-item array expansion ready in schema.
 2. **Invoice PDF Generation**: PDF invoice export component planned for future release.
