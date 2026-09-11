@@ -9,24 +9,33 @@ const prisma = new PrismaClient();
 async function seed() {
   console.log("🌱 Seeding database...");
 
-  // Create admin user
-  const existing = await prisma.user.findUnique({
-    where: { email: "admin@mini-erp.com" },
-  });
+  // Create test users for all roles
+  const usersToSeed = [
+    { name: "Admin User", email: "admin@mini-erp.com", password: "admin123", role: "ADMIN" as const },
+    { name: "Sales Executive", email: "sales@mini-erp.com", password: "sales123", role: "EMPLOYEE" as const },
+    { name: "Warehouse Manager", email: "warehouse@mini-erp.com", password: "wh12345", role: "MANAGER" as const },
+    { name: "Accounts Manager", email: "accounts@mini-erp.com", password: "acc12345", role: "EMPLOYEE" as const },
+  ];
 
-  if (!existing) {
-    const hashed = await bcrypt.hash("admin123", 10);
-    const admin = await prisma.user.create({
-      data: {
-        name: "Admin User",
-        email: "admin@mini-erp.com",
-        password: hashed,
-        role: "ADMIN",
-      },
+  for (const u of usersToSeed) {
+    const existingUser = await prisma.user.findUnique({
+      where: { email: u.email },
     });
-    console.log("✅ Admin created:", admin.email);
-  } else {
-    console.log("ℹ️  Admin already exists:", existing.email);
+
+    if (!existingUser) {
+      const hashed = await bcrypt.hash(u.password, 10);
+      const created = await prisma.user.create({
+        data: {
+          name: u.name,
+          email: u.email,
+          password: hashed,
+          role: u.role,
+        },
+      });
+      console.log(`✅ User created [${u.role}]:`, created.email);
+    } else {
+      console.log(`ℹ️  User already exists [${u.role}]:`, existingUser.email);
+    }
   }
 
   // Create sample customers
