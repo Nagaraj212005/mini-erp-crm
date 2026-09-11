@@ -1,3 +1,4 @@
+import { Role } from "@prisma/client";
 import bcrypt from "bcrypt";
 import prisma from "../config/prisma";
 
@@ -22,7 +23,7 @@ export const registerUser = async (
       name,
       email,
       password: hashedPassword,
-      role,
+      role: role as Role,
     },
   });
 
