@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  EMPLOYEE
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      Role
+  createdAt DateTime @default(now())
+
+  sales Sale[] @relation("CreatedSales")
+}
+
+model Customer {
+  id             Int       @id @default(autoincrement())
+  name           String
+  email          String    @unique
+  phone          String?
+  businessName   String?
+  gst            String?
+  customerType   String?   @default("Retail")
+  address        String?
+  status         String?   @default("Active")
+  followUpDate   DateTime?
+  notes          String?
+
+  createdAt      DateTime  @default(now())
+
+  sales Sale[]
+}
+
+model Product {
+  id            Int      @id @default(autoincrement())
+  name          String
+  description   String?
+  sku           String?
+  category      String?
+  price         Float
+  stock         Int
+  minStock      Int?      @default(0)
+  warehouse     String?
+
+  createdAt     DateTime @default(now())
+
+  saleItems SaleItem[]
+}
+
+model Sale {
+  id            Int      @id @default(autoincrement())
+  customerId    Int
+  createdById   Int
+  totalAmount   Float
+  status        String    @default("Confirmed")
+  createdAt     DateTime  @default(now())
+
+  customer   Customer @relation(fields: [customerId], references: [id])
+  createdBy  User @relation("CreatedSales", fields: [createdById], references: [id])
+
+  items SaleItem[]
+}
+
+model SaleItem {
+  id          Int @id @default(autoincrement())
+
+  saleId      Int
+  productId   Int
+
+  quantity    Int
+  price       Float
+
+  sale         Sale @relation(fields: [saleId], references: [id])
+  product      Product @relation(fields: [productId], references: [id])
+}
